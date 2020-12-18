@@ -1,4 +1,4 @@
-import { Discord } from './struct/client.js'
+import { Discord } from './struct/Client.js'
 import { Lottery } from './struct/Lotto.js'
 import config from './config.js'
 

@@ -1,6 +1,6 @@
 {
   "name": "auto-lotto",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "An auto lottery bot made with Eris.",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

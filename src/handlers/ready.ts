@@ -1,12 +1,14 @@
 import Eris from 'eris'
 
-export default class Listener {
-    public client: Eris.Lava.Client;
-    public constructor(client: Eris.Lava.Client) {
-        this.client = client;
-    }
+export default class Ready {
+	public client: Eris.Lava.Client;
+	public constructor(client: Eris.Lava.Client) {
+		this.client = client;
+	}
 
-    public exec(): void {
-        this.client.logger.info(this.constructor.name, `${this.client.user.username}#${this.client.user.discriminator} is now online.`)
-    }
+	public async exec(): Promise<void> {
+		const message: string = `${this.client.user.username}#${this.client.user.discriminator} is now online.`
+		this.client.logger.info('Core', message);
+		await this.client.lottery.patch();
+	}
 }

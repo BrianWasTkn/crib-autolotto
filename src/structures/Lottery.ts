@@ -12,7 +12,6 @@ class Lottery implements Eris.Lava.Lottery {
 	public constructor(client: Eris.Lava.Client) {
     	this.client = client;
     	this.config = config.lottery;
-    	// client.on('ready', this.patch);
 	}
 
 	public async patch(): Promise<void> {
@@ -28,11 +27,11 @@ class Lottery implements Eris.Lava.Lottery {
 	public async runInterval(): Promise<void> {
 		const member = this.guild.members.random();
 		if (member.bot) {
-			return await this.runInterval();
+			return this.runInterval();
 		} else {
 			await this.roll(member);
 			await this.client.util.sleep(this.config.interval);
-			return await this.runInterval();
+			return this.runInterval();
 		}
 	}
 
@@ -58,19 +57,20 @@ class Lottery implements Eris.Lava.Lottery {
 			multi = util.randomNumber(1, 5);
 		}
 
-		won += Math.floor(won * (multi / 100));
-		won = won > cap ? ((cap * 1000 + 1) / 1000) : won;
+		won += Math.round(won * (multi / 100));
+		won = ((won * 1000) > cap) ? ((cap + 1) / 1000) : won;
 		won *= 1000; raw *= 1000;
 
 		return { won, raw, multi };
 	}
 
 	public async roll(winner: Eris.Member): Promise<Eris.Message> {
-		const emoji: Eris.Emoji = this.guild.emojis.find((emoji: Eris.Emoji) => emoji.id === '717347901587587153');
+		// const emoji: Eris.Emoji = this.guild.emojis.find((emoji: Eris.Emoji) => emoji.id === '717347901587587153');
+		const emoji: Eris.Emoji = this.client.guilds.find(g => g.name === 'ServerWasTaken').emojis.find(e => e.id === '753138901169995797');
 		const won: { [K: string]: number } = this.calcCoins();
 		const message: string = [
 			`<${emoji.animated ? 'a:' : ''}:${emoji.name}:${emoji.id}> **__Auto Lottery:tm:__**`,
-			`${winner.mention} walked away with **${won.won.toLocaleString()} (${won.raw.toLocaleString()} original)** coins.`,
+			`**${winner.username}#${winner.discriminator}** walked away with **${won.won.toLocaleString()} (${won.raw.toLocaleString()} original)** coins.`,
 			`\n**Multiplier:** ${won.multi}%`
 		].join('\n');
 

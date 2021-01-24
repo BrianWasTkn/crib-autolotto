@@ -31,15 +31,19 @@ class Client extends Eris.Client implements Eris.Lava.Client {
 			const command = require(path.join(__dirname, '..', 'commands', c)).default;
 			this.commands.set(command.props.name, command);
 			command.props.triggers.forEach((a: string) => this.aliases.set(a, command));
-		})
+			this.logger.info('Core', `Command "${command.props.name}" loaded.`);
+		});
 	}
 
 	public buildListeners(): void {
 		const listeners = fs.readdirSync(path.join(__dirname, '..', 'handlers')); 
 		listeners.forEach((l: string) => {
-			const listener = new (require(path.join(__dirname, '..', 'handlers', l)).default)(this);
-			this.on(l.split('.')[0], listener.exec);
-		})
+			this.on(l.split('.')[0], async (...args: any) => {
+				const listener = new (require(path.join(__dirname, '..', 'handlers', l)).default)(this);
+				await listener.exec(...args);
+			});
+			this.logger.info('Core', `Listener "${l.split('.')[0]}" loaded.`);
+		});
 	}
 	
 	public async connect(): Promise<void> {

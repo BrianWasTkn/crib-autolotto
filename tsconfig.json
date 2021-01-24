@@ -14,7 +14,6 @@
 		"incremental": true,
 		"esModuleInterop": true,
 		"noImplicitAny": false,
-		"noImplicitReturns": true,
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true,
 		"typeRoots": ["./src/typings", "./node_modules/@types"]

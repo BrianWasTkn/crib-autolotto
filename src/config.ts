@@ -5,18 +5,23 @@ const config: Eris.Lava.Config = {
 	prefix: ['lotto', '>>'],
 	owners: ['605419747361947649'],
 	lottery: {
-		guild: '',
-		channel: '',
-		role: '',
-		interval: 6 * 60 * 1000,
+		guild: '691416705917779999',
+		channel: '692527636676739072',
+		role: '692517500814098462',
+		interval: 1 * 60 * 1000,
 		rewards: {
-			min: 100000,
-			max: 500000,
-			cap: 600001
+			min: 1e3,
+			max: 1e100,
+			cap: 3e100
 		}
 	},
 	clientOptions: {
-		restMode: true
+		restMode: true,
+		intents: [
+			'guilds',
+			'guildMessages',
+			'guildMembers'
+		]
 	}
 }
 

@@ -1,5 +1,5 @@
-import { AnyAaaaRecord } from 'dns';
 import Eris from 'eris'
+import * as colors from './colors'
 
 export default class Command implements Eris.Lava.Command {
 	public id: string | number;
@@ -18,19 +18,9 @@ export default class Command implements Eris.Lava.Command {
 	}): Promise<Eris.Message> {
 		// Guild-wide Permissions 
 		let missingPerms: Eris.Lava.PermissionKeys[] = [];
-		const embed = this.checkPermissions(msg, []);
-		return await Bot.createMessage(msg.channel.id, { embed });
-	}
-
-	public checkPermissions(msg: Eris.Message, result: Eris.Lava.PermissionKeys[]): any {
-		for (let perm of this.props.userPerms || []) {
-			if (!msg.member.permissions.has(perm)) {
-				result.push(perm);
-			}
-		}
-
-		return {
-			color: 'red',
+		const result = this.checkPermissions(msg, missingPerms);
+		if (result && result.length > 1) return Bot.createMessage(msg.channel.id, { embed: {
+			color: colors.red,
 			title: 'Well rip, no perms',
 			description: [
 				`You don't have permissions to run the \`${this.props.name}\` command.`,
@@ -40,6 +30,20 @@ export default class Command implements Eris.Lava.Command {
 				name: 'Required Permission(s)',
 				value: `\`${result.join('`, `')}\``
 			}]
+		}});
+
+		// Command Execution
+		const commandReturn = await this.fn({ Bot, msg, args });
+		return Bot.createMessage(msg.channel.id, commandReturn instanceof Object ? { embed: commandReturn } : commandReturn);
+	}
+
+	public checkPermissions(msg: Eris.Message, result: Eris.Lava.PermissionKeys[]): any {
+		for (let perm of this.props.userPerms || []) {
+			if (!msg.member.permissions.has(perm)) {
+				result.push(perm);
+			}
 		}
+
+		return result;
 	}
 }

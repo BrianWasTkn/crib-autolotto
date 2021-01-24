@@ -5,7 +5,8 @@ declare module 'eris' {
 		// Structures
 		export class Client extends ErisClient {
             public constructor(token: string, options?: ClientOptions);
-			public commands: Collection<LavaCommand>;
+			public commands: Collection<Command>;
+            public aliases: Collection<Command>;
             public lottery: Lottery;
             public logger: Logger;
             public config: Config;
@@ -40,6 +41,7 @@ declare module 'eris' {
         }
         export interface Logger {
             info: (klass: string, message: any) => void;
+            error: (klass: string, message: any, error?: Error, stack?: boolean) => void;
         }
         export interface Util {
             randomNumber: (min: number, max: number) => number;
@@ -69,7 +71,7 @@ declare module 'eris' {
         };
         export interface CommandFuncParams {
             Bot?: Client;
-            msg:? Message;
+            msg:? Message<GuildTextableChannel>;
             args?: string[]
         }
 

@@ -1,4 +1,5 @@
 require('dotenv').config();
+import Eris from 'eris'
 import Client from './structures/Client' 
 import config from './config'
 

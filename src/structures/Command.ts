@@ -5,17 +5,13 @@ export default class Command implements Eris.Lava.Command {
 	public id: string | number;
 	public props: Eris.Lava.CommandProps;
 	public fn: any;
-	public constructor(fn: any, props: Eris.Lava.CommandProps) {
+	public constructor(props: Eris.Lava.CommandProps, fn: any) {
 		this.id = 'command';
 		this.props = props;
 		this.fn = fn;
 	}
 
-	public async run({ Bot, msg, args }: {
-		Bot: Eris.Lava.Client,
-		msg: Eris.Message<Eris.GuildTextableChannel>,
-		args: string[]
-	}): Promise<Eris.Message> {
+	public async run({ Bot, msg, args }: Eris.Lava.CommandParameters): Promise<Eris.Message> {
 		// Guild-wide Permissions 
 		let missingPerms: Eris.Lava.PermissionKeys[] = [];
 		const result = this.checkPermissions(msg, missingPerms);
@@ -24,17 +20,22 @@ export default class Command implements Eris.Lava.Command {
 			title: 'Well rip, no perms',
 			description: [
 				`You don't have permissions to run the \`${this.props.name}\` command.`,
-				'Make sure you have the following permission to use this:'
+				'Make sure you have the following permission to use this command:'
 			].join('\n'),
 			fields: [{
-				name: 'Required Permission(s)',
+				name: `${result.length} Required Permission(s)`,
 				value: `\`${result.join('`, `')}\``
 			}]
 		}});
 
 		// Command Execution
 		const commandReturn = await this.fn({ Bot, msg, args });
-		return Bot.createMessage(msg.channel.id, commandReturn instanceof Object ? { embed: commandReturn } : commandReturn);
+		return Bot.createMessage(
+			msg.channel.id, 
+			commandReturn instanceof Object 
+				? { embed: commandReturn } 
+			: commandReturn
+		);
 	}
 
 	public checkPermissions(msg: Eris.Message, result: Eris.Lava.PermissionKeys[]): any {

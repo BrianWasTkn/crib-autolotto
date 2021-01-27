@@ -1,7 +1,8 @@
+import { EventEmitter } from 'events'
 import Eris from 'eris'
 import config from '../config'
 
-class Lottery implements Eris.Lava.Lottery {
+class Lottery extends EventEmitter implements Eris.Lava.Lottery {
 	public client: Eris.Lava.Client;
 	public config: Eris.Lava.LotteryConfig;
 	public guild: Eris.Guild;
@@ -10,6 +11,7 @@ class Lottery implements Eris.Lava.Lottery {
 	public winners: Eris.Collection<Eris.User>;
 	public rewards: Eris.Lava.LotteryRewards;
 	public constructor(client: Eris.Lava.Client) {
+		super();
     	this.client = client;
     	this.config = config.lottery;
 	}
@@ -21,23 +23,21 @@ class Lottery implements Eris.Lava.Lottery {
 		this.winners = new Eris.Collection<Eris.User>(Eris.User);
 		this.rewards = this.config.rewards;
 
-		await this.runInterval();
+		this.emit('patch', this);
+		await this.run();
 	}
 
-	public async runInterval(): Promise<void> {
-		const member = this.guild.members.random();
-		if (member.bot) {
-			return this.runInterval();
-		} else {
-			await this.roll(member);
-			await this.client.util.sleep(this.config.interval);
-			return this.runInterval();
-		}
+	public async run(): Promise<void> {
+		const member = this.roll();
+		const won = this.calcCoins();
+		this.emit('roll', this, member, won);
+		await this.client.util.sleep(this.config.interval);
+		return this.run();
 	}
 
 	public calcCoins(): { [k: string]: number } {
-		const { util } = this.client;
 		const { rewards: { min, max, cap } } = this;
+		const { util } = this.client;
 		let won: number = util.randomNumber(min / 1000, max / 1000);
 		let odds: number = Math.random();
 		let raw: number = won;
@@ -64,17 +64,12 @@ class Lottery implements Eris.Lava.Lottery {
 		return { won, raw, multi };
 	}
 
-	public async roll(winner: Eris.Member): Promise<Eris.Message> {
-		// const emoji: Eris.Emoji = this.guild.emojis.find((emoji: Eris.Emoji) => emoji.id === '717347901587587153');
-		const emoji: Eris.Emoji = this.client.guilds.find(g => g.name === 'ServerWasTaken').emojis.find(e => e.id === '753138901169995797');
-		const won: { [K: string]: number } = this.calcCoins();
-		const message: string = [
-			`<${emoji.animated ? 'a:' : ''}:${emoji.name}:${emoji.id}> **__Auto Lottery:tm:__**`,
-			`**${winner.username}#${winner.discriminator}** walked away with **${won.won.toLocaleString()} (${won.raw.toLocaleString()} original)** coins.`,
-			`\n**Multiplier:** ${won.multi}%`
-		].join('\n');
+	public roll(): Eris.Member {
+		const members: Eris.Member[] = this.guild.members
+		.filter((m: Eris.Member) => !m.bot)
+		.filter((m: Eris.Member) => m.roles.includes(this.requirement.id));
 
-		return await this.client.createMessage(this.channel.id, message);
+		return this.client.util.randomInArray(members);
 	}
 }
 

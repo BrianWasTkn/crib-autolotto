@@ -1,6 +1,6 @@
 import Eris from 'eris'
 
-export default class Ready {
+export default class {
 	public client: Eris.Lava.Client;
 	public constructor(client: Eris.Lava.Client) {
 		this.client = client;

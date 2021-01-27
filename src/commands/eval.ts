@@ -1,14 +1,20 @@
 import Command from '../structures/Command'
 import * as colors from '../structures/colors'
-import Eris from 'eris'
+import { Lava, Message, GuildTextableChannel, EmbedOptions } from 'eris'
 import { inspect } from 'util'
 
-export default new Command(
-async ({ Bot, msg, args }: Eris.Lava.CommandFuncParams): Promise<Eris.EmbedOptions> => {
-	
+export default new Command({
+	name: 'eval',
+	triggers: ['ev', 'e'],
+	userPerms: ['administrator']
+}, async ({ Bot, msg, args }: Lava.CommandParameters): Promise<EmbedOptions> => {
 	const code = args.join(' ');
 	const isPromise = code.includes('await') || code.includes('return');
-	let before, evaled, type, evalTime, error;
+	let before: number;
+	let evalTime: number;
+	let evaled: Promise<any> | any;
+	let type: typeof evaled;
+	let error: boolean;
 
 	before = Date.now();
 	try {
@@ -38,8 +44,4 @@ async ({ Bot, msg, args }: Eris.Lava.CommandFuncParams): Promise<Eris.EmbedOptio
 			value: '```\n' + evalTime + 'ms\n```'
 		}],
 	}
-}, {
-	name: 'eval',
-	triggers: ['ev'],
-	userPerms: ['administrator']
 });

@@ -16,8 +16,8 @@ const config: Eris.Lava.Config = {
 		}
 	},
 	clientOptions: {
+		maxReconnectAttempts: 3,
 		defaultImageFormat: 'png',
-		autoreconnect: false,
 		restMode: true,
 		intents: [
 			'guilds',

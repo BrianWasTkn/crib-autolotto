@@ -1,4 +1,10 @@
-node_modules
-build
+# Typescript
+types/
+dist/
+
+# Node
+node_modules/
+
+# Other
 .vscode
 .env

@@ -42,15 +42,13 @@ class Client extends Eris.Client implements Eris.Lava.Client {
 		const discord = fs.readdirSync(path.join(__dirname, '..', 'handlers', 'discord')); 
 		const lotto = fs.readdirSync(path.join(__dirname, '..', 'handlers', 'lottery'));
 		const listeners = [
-			{ files: discord, key: 'Discord' },
-			{ files: lotto, key: 'Lottery' },
+			{ files: discord, key: 'Discord', emitter: this },
+			{ files: lotto, key: 'Lottery', emitter: this.lottery },
 		];
 
 		for (const group of listeners) {
 			group.files.forEach((l: string) => {
-				let emitter: Eris.Lava.Client | Eris.Lava.Lottery;
-				emitter = group.key === 'Lottery' ? this.lottery : this;
-				emitter.on(l.split('.')[0], async (...args: any) => {
+				group.emitter.on(l.split('.')[0], async (...args: any) => {
 					const listener = new (require(path.join(__dirname, '..', 'handlers', group.key.toLowerCase(), l)).default)(this);
 					await listener.exec(...args);
 				});
@@ -58,21 +56,6 @@ class Client extends Eris.Client implements Eris.Lava.Client {
 				this.logger.info('Core', `${group.key} Listener "${l.split('.')[0]}" loaded.`);
 			});
 		}
-
-		// discord.forEach((l: string) => {
-		// 	this.on(l.split('.')[0], async (...args: any) => {
-		// 		const listener = new (require(path.join(__dirname, '..', 'handlers', 'discord', l)).default)(this);
-		// 		await listener.exec(...args);
-		// 	});
-		// 	this.logger.info('Core', `Discord Listener "${l.split('.')[0]}" loaded.`);
-		// });
-		// lotto.forEach((l: string) => {
-		// 	this.on(l.split('.')[0], async (...args: any) => {
-		// 		const listener = new (require(path.join(__dirname, '..', 'handlers', 'lottery', l)).default)(this);
-		// 		await listener.exec(...args);
-		// 	});
-		// 	this.logger.info('Core', `Lotto Listener "${l.split('.')[0]}" loaded.`);
-		// })
 	}
 	
 	public async connect(): Promise<void> {

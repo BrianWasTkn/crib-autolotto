@@ -31,6 +31,8 @@ declare module 'eris' {
             public requirement: Eris.Role;
             public winners: Eris.Collection<Eris.User>;
             public rewards: LotteryRewards;
+            public set setActive(v: boolean);
+            public get isActive(): boolean;
             public patch(): Promise<void>;
             public run(): Promise<void>;
             public calcCoins(): { [K: string]: number };

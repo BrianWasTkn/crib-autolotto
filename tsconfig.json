@@ -4,7 +4,9 @@
 	"compilerOptions": {
 		"module": "commonjs",
 		"target": "es2018",
-		"outDir": "build",
+		"outDir": "dist",
+		"declaration": true,
+		"declarationDir": "./types",
 		"skipLibCheck": true,
 		"resolveJsonModule": true,
 		"moduleResolution": "node",

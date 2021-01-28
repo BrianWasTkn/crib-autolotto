@@ -10,10 +10,20 @@ class Lottery extends EventEmitter implements Eris.Lava.Lottery {
 	public requirement: Eris.Role;
 	public winners: Eris.Collection<Eris.User>;
 	public rewards: Eris.Lava.LotteryRewards;
+	public active: boolean;
 	public constructor(client: Eris.Lava.Client) {
 		super();
     	this.client = client;
+    	this.active = this.isActive;
     	this.config = config.lottery;
+	}
+
+	public set setActive(v: boolean) {
+		this.active = v;
+	}
+
+	public get isActive(): boolean {
+		return this.active;
 	}
 
 	public async patch(): Promise<void> {
@@ -22,6 +32,7 @@ class Lottery extends EventEmitter implements Eris.Lava.Lottery {
 		this.requirement = this.guild.roles.get(this.config.role);
 		this.winners = new Eris.Collection<Eris.User>(Eris.User);
 		this.rewards = this.config.rewards;
+		this.setActive = true;
 
 		this.emit('patch', this);
 		await this.run();

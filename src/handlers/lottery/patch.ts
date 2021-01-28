@@ -6,10 +6,10 @@ export default class {
 		this.client = client;
 	}
 
-	public async exec(lottery: Eris.Lava.Lottery): Promise<any> {
-		this.client.logger.info('Core', `Guild: ${lottery.guild.name}`);
-		this.client.logger.info('Core', `Channel: ${lottery.channel.name}`);
-		this.client.logger.info('Core', `Requirement: ${lottery.roll.name}`);
+	public async exec({ guild, channel, requirement }: Eris.Lava.Lottery): Promise<any> {
+		this.client.logger.info('Core', `Guild: ${guild.name}`);
+		this.client.logger.info('Core', `Channel: ${channel.name}`);
+		this.client.logger.info('Core', `Requirement: ${requirement.name}`);
 		return this.client.logger.info('Core', 'The lottery has been patched.');
 	}
 }

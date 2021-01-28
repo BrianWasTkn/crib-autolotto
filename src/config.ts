@@ -8,7 +8,7 @@ const config: Eris.Lava.Config = {
 		guild: '691416705917779999',
 		channel: '692527636676739072',
 		role: '692517500814098462',
-		interval: 1 * 5 * 1000,
+		interval: 6 * 60 * 60 * 1000,
 		rewards: {
 			min: 250000,
 			max: 2500000,

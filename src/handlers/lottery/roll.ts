@@ -13,8 +13,9 @@ export default class {
 	): Promise<Eris.Message> {
 		// const emoji: Eris.Emoji = lottery.guild.emojis.find((emoji: Eris.Emoji) => emoji.id === '717347901587587153');
 		if (!lottery.isActive) return null;
+		const emoji: Eris.Emoji = lottery.client.guilds.get('691416705917779999').emojis.find(e => e.id === '717347901587587153');
 		const message: string = [
-			`**<:memerGold:753138901169995797> __Auto Lottery:tm:__**`,
+			`<${emoji.animated ? 'a:' : ''}:${emoji.name}:${emoji.id}> **__Auto Lottery:tm:__**`,
 			`**${winner.user.username}#${winner.user.discriminator}** walked away with **${won.won.toLocaleString()} (${won.raw.toLocaleString()} original)** coins.`,
 			`\n**Multiplier:** ${won.multi}%`
 		].join('\n');

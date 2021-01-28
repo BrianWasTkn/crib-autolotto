@@ -16,7 +16,7 @@ export default class {
 		const emoji: Eris.Emoji = lottery.client.guilds.get('691416705917779999').emojis.find(e => e.id === '717347901587587153');
 		const message: string = [
 			`<${emoji.animated ? 'a:' : ''}:${emoji.name}:${emoji.id}> **__Auto Lottery:tm:__**`,
-			`**${winner.user.username}#${winner.user.discriminator}** walked away with **${won.won.toLocaleString()} (${won.raw.toLocaleString()} original)** coins.`,
+			`**${winner.mention}** walked away with **${won.won.toLocaleString()} (${won.raw.toLocaleString()} original)** coins.`,
 			`\n**Multiplier:** ${won.multi}%`
 		].join('\n');
 

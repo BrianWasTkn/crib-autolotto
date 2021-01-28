@@ -6,7 +6,7 @@ const config: Eris.Lava.Config = {
 	owners: ['605419747361947649'],
 	lottery: {
 		guild: '691416705917779999',
-		channel: '692527636676739072',
+		channel: '717351680676462712',
 		role: '692517500814098462',
 		interval: 6 * 60 * 60 * 1000,
 		rewards: {

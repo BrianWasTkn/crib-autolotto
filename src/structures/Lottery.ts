@@ -13,9 +13,9 @@ class Lottery extends EventEmitter implements Eris.Lava.Lottery {
 	public active: boolean;
 	public constructor(client: Eris.Lava.Client) {
 		super();
-    	this.client = client;
-    	this.active = this.isActive;
-    	this.config = config.lottery;
+		this.client = client;
+		this.active = this.isActive;
+		this.config = config.lottery;
 	}
 
 	public set setActive(v: boolean) {
